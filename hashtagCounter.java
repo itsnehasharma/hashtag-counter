@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class hashtagCounter {
+    
 
     public static void main(String[] args) throws IOException {
 
@@ -83,6 +84,8 @@ public class hashtagCounter {
 
         System.out.println("HASHMAP WITH NODES");
         System.out.println(hashtags.toString());
+
+        System.out.println(tree.toString());
 
         reader.close();
         writer.close();
