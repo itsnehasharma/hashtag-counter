@@ -33,6 +33,10 @@ public class Node{
         this.degree = degree;
     }
 
+    public void increaseDegree(){
+        this.degree = this.degree + 1;
+    }
+
 
     /**
      * @return the child
@@ -127,6 +131,16 @@ public class Node{
 
         return str;
 
+    }
+
+    public void reset(){
+        // this.degree = 0;
+        // this.child = null;
+        this.parent = null;
+        this.data = -9999;
+        this.leftSib = null;
+        this.rightSib = null;
+        // this.childCut = false;
     }
     
     
