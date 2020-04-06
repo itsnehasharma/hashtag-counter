@@ -36,10 +36,8 @@ public class FibbTree {
 
     public void meld(Node a, Node b) {
 
-        // FibbTree tempSib = new FibbTree();
-        // tempSib.setMaxPtr(b);
+        Node curr = a;
 
-        // Node temp = a.getLeftSib();
         if (a.getLeftSib().equals(a)) {
             a.setLeftSib(b);
             a.setRightSib(b.getRightSib());
@@ -59,8 +57,6 @@ public class FibbTree {
         }
 
         // reset the max ptr
-        Node curr = a;
-
         do {
             if (curr.getData() > maxPtr.getData()) {
                 maxPtr = curr;
@@ -70,6 +66,7 @@ public class FibbTree {
 
     }
 
+    // review
     public void remove(Node theNode) {
 
         // remove theNode from its doubly linked sibling list
@@ -96,41 +93,53 @@ public class FibbTree {
 
             meld(maxPtr, tempChild);
         }
-
         // combine top level list and children list using meld
-
     }
 
-    // needs edits
     public void increaseKey(Node n, int scalar) {
 
         int temp = n.getData(); // current data
         n.setData(temp + scalar); // increase data by scalar
 
-        if (n.getParent() != null) { // if parent not null need to check parent data
-            if (n.getParent().getData() < n.getData()) { // if new node is larger
-                // remove subtree from the parent
-                // if node has a sibling, set parent.child to equal a sibling (just in case,
-                // since its arbitrary)
-                // otherwise set parent.child = null
-                // if parent . childcut is true need to do the same thing - while loop?
-                // else set parent. childcut true
+        Node curr = n;
+        // Vector<Node> nodesToInsert = new Vector<Node>();
 
-                Node curr = n;
+        boolean recheck = true;
+        Node p;
 
-                while ((curr.getParent() != null) && (curr.getParent().getChildCut() == true)) {
-                    // perform child cut
+        // cascading cut
+        if (curr.getParent() != null) {
+            if (curr.getData() > curr.getParent().getData()) {
+                while (recheck) {
+                    if (curr.getParent() != null) { //already at the top level of the list 
+                        p = curr.getParent();
+
+                        if (!curr.getLeftSib().equals(curr)) { // node has siblings
+                            curr.getRightSib().setLeftSib(curr.getLeftSib());
+                            curr.getLeftSib().setRightSib(curr.getRightSib());
+                            p.setChild(curr.getLeftSib()); // just in case
+                        } else {
+                            p.setChild(null); //only child gone
+                        }
+
+                        p.decreaseDegree();
+                        curr.setParent(null);
+                        // nodesToInsert.add(curr);
+                        insert(curr);
+                        curr = p;
+
+                        if (curr.getChildCut()) {
+                            recheck = true;
+                        } else {
+                            curr.setChildCut(true);
+                            recheck = false;
+                        }
+                    }
                 }
 
-                if (n.getRightSib() != null) {
-                    n.getParent().setChild(n.getRightSib()); // setting parent's child to another node just in case
-                } else {
-                    n.getParent().setChild(null); // n was parent's only child
-                }
-
-                insert(n); // insert n into fibb tree
             }
         }
+
     }
 
     public Node removeMax() {
@@ -143,9 +152,6 @@ public class FibbTree {
         // removing maxPtr from the top list
         maxRight.setLeftSib(maxLeft);
         maxLeft.setRightSib(maxRight);
-
-        // maxPtr.setLeftSib(null);
-        // maxPtr.setRightSib(null);
 
         // if maxPtr was the only one in the list
         if (maxLeft.equals(maxPtr)) {
@@ -170,19 +176,19 @@ public class FibbTree {
         Node curr = start;
         int maxNum = 0;
 
-        // check for new maxPtr
-        do {
-            if (curr.getData() > maxNum) {
-                maxNum = curr.getData();
-                maxPtr = curr;
-            }
-            curr = curr.getRightSib();
-        } while (!curr.equals(start));
-
-        // pairwiseCombine(maxLeft);
-        // System.out.println(toString());
-
-        // maxPtr = maxRight; // new arbitrary max ptr.
+        // check for new maxPtr if not empty
+        if (maxPtr != null){
+            do {
+                if (curr.getData() > maxNum) {
+                    maxNum = curr.getData();
+                    maxPtr = curr;
+                }
+                curr = curr.getRightSib();
+            } while (!curr.equals(start));
+        } else {
+            maxPtr = new Node(-9999);
+        }
+       
 
         if (maxPtr != null) {
             pairwiseCombine();
@@ -238,6 +244,7 @@ public class FibbTree {
                         temp.setChild(curr);
                     }
                     curr.setParent(temp);
+                    curr.setChildCut(false);
                     temp.increaseDegree();
                     curr = temp; // final tree stored in curr
                 } else {
@@ -252,6 +259,7 @@ public class FibbTree {
                         curr.setChild(temp);
                     }
                     temp.setParent(curr);
+                    temp.setChildCut(false);
                     curr.increaseDegree();
                 }
 
@@ -269,37 +277,20 @@ public class FibbTree {
                 treeTable.put(curr.getDegree(), curr);
                 recheck = false;
                 // remove the node from the old heap
-                // oldPtr = oldPtr.getRightSib(); // move old heap ptr to next
                 curr = oldPtr; // next
             }
         }
 
-        // tree table complete
-        // Set keySet = treeTable.keySet();
-
-        // Enumeration keys = treeTable.keys();
         Set<Integer> keySet = treeTable.keySet();
-        // maxPtr.reset(); // totally new fibb heap
 
-        // maxPtr = treeTable.get(keySet.get(0)); //arbitrary max ptr
-        // newPtr = treeTable.get(keySet.get(1));
-        // newPtr = maxPtr;
-        // System.out.println(treeTable.get(0).getData());
         for (int key : keySet) {
-            // System.out.print(key + " ");
-            // System.out.println(treeTable.get(key).getData());
+
             insert(treeTable.get(key));
         }
 
-        // System.out.println(toString());
-        // for (int i = 0; i < keys.size(); i++){
-        // insert(treeTable.get(keys.get(i)));
-        // }
-
     }
 
-    // uhhhhh please do an entire write of what this should be
-    // node A is the one after the minptr since it was deleted
+    // DELETE//
     public void pairwiseCombine(Node a) {
 
         Hashtable<Integer, Node> treeTable = new Hashtable<Integer, Node>();

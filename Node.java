@@ -19,6 +19,16 @@ public class Node{
         this.childCut = false;
     }
 
+    Node(int degree, Node child, Node parent, int data, Node leftSib, Node rightSib, boolean childCut){
+        this.degree = degree;
+        this.child = child;
+        this.parent = parent;
+        this.data = data;
+        this.leftSib = leftSib;
+        this.rightSib = rightSib;
+        this.childCut = childCut;
+    }
+
     /**
      * @return the degree
      */
@@ -35,6 +45,10 @@ public class Node{
 
     public void increaseDegree(){
         this.degree = this.degree + 1;
+    }
+
+    public void decreaseDegree(){
+        this.degree = this.degree - 1;
     }
 
 
