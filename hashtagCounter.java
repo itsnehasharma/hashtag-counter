@@ -16,35 +16,32 @@ public class hashtagCounter {
         String outputFileName = "";
         BufferedWriter writer = null;
 
-        if (args.length == 1) {
+        if (args.length == 1) { // if only input file provided
             outputFileName = "printToConsole";
-        } else if (args.length == 2) {
+        } else if (args.length == 2) { // if input and output file provided
             outputFileName = args[1];
             File outputFile = new File(outputFileName);
             writer = new BufferedWriter(new FileWriter(outputFile));
-        } else {
+        } else { // no files were provided, exit
             System.out.println("Please specify an input file.");
             System.exit(0);
         }
 
         Hashtable<String, Node> hashtags = new Hashtable<String, Node>();
 
-        String s = "";
-
         FibbTree tree = new FibbTree();
-
-        // array to hold the string just read into the word and its frequency
-        String split[] = new String[2];
+        String s = ""; // will be used to read from file
+        String split[] = new String[2]; // array to hold the string just read into the word and its frequency
+       
         Node temp;
         int frequency;
         String tag;
         Node max;
+        
         Vector<Node> reinsert = new Vector<Node>();
 
         s = reader.readLine(); // read first line of file into s
         while (s != null) { // while the file has a next input
-            // System.out.println("here");
-            // System.out.println(s);
 
             if (s.charAt(0) == '#') { // hashtag in the list
 
@@ -59,20 +56,14 @@ public class hashtagCounter {
                     temp = hashtags.get(tag);
 
                     tree.increaseKey(temp, frequency);
-                    // System.out.println("update " + update);
-                    // update++;
+
                 } else { // if the hashtag does not exist in the map
 
                     Node n = new Node(frequency);
                     tree.insert(n);
                     hashtags.put(tag, n);
-                    // System.out.println("insert "+ insert);
-                    // insert++;
-
                 }
             } else if (s.equalsIgnoreCase("stop")) {
-
-                System.out.println("done");
 
                 reader.close();
 
@@ -80,17 +71,11 @@ public class hashtagCounter {
                     writer.close();
                 }
 
-                // printTable(hashtags);
-                System.out.println(tree.toString());
-
                 System.exit(0);
 
             } else {
 
                 int numWords = Integer.valueOf(s);
-
-                // System.out.println("printing " + numWords + " words");
-                // System.out.println(tree.toString());
 
                 for (int i = 0; i < numWords; i++) {
                     max = tree.removeMax();
@@ -98,15 +83,15 @@ public class hashtagCounter {
                     for (String str : hashtags.keySet()) {
                         if (hashtags.get(str).equals(max)) {
 
-                            if (outputFileName.equals("printToConsole")) {
+                            if (outputFileName.equals("printToConsole")) { // if no output file was given
                                 System.out.print(str);
                                 if (i < numWords - 1) {
                                     System.out.print(",");
                                 }
-                            } else {
+                            } else { // output file name was given
                                 writer.append(str);
                                 if (i < numWords - 1) {
-                                    System.out.print(",");
+                                    writer.append(",");
                                 }
                             }
                         }
@@ -118,25 +103,12 @@ public class hashtagCounter {
                 } else {
                     writer.append("\n");
                 }
-                
 
                 for (Node x : reinsert) {
-                    tree.insert(x);
+                    tree.insert(x); // reinsert removed items back into heap
                 }
             }
-
             s = reader.readLine();
-
         }
-
     }
-
-    // public static void printTable(Hashtable<String, Node> h){
-
-    // Set<String> ks = h.keySet();
-    // for (String key: ks){
-    // System.out.println(key + ": " + h.get(key).getData());
-    // }
-
-    // }
 }

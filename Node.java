@@ -19,16 +19,6 @@ public class Node{
         this.childCut = false;
     }
 
-    Node(int degree, Node child, Node parent, int data, Node leftSib, Node rightSib, boolean childCut){
-        this.degree = degree;
-        this.child = child;
-        this.parent = parent;
-        this.data = data;
-        this.leftSib = leftSib;
-        this.rightSib = rightSib;
-        this.childCut = childCut;
-    }
-
     /**
      * @return the degree
      */
@@ -43,14 +33,15 @@ public class Node{
         this.degree = degree;
     }
 
+    //increase degree by one
     public void increaseDegree(){
         this.degree = this.degree + 1;
     }
 
+    //decrease degree by one
     public void decreaseDegree(){
         this.degree = this.degree - 1;
     }
-
 
     /**
      * @return the child
@@ -94,7 +85,6 @@ public class Node{
         this.data = data;
     }
 
-
     /**
      * @return the rightSib
      */
@@ -122,7 +112,6 @@ public class Node{
     public void setLeftSib(Node leftSib) {
         this.leftSib = leftSib;
     }
-
   
     /**
      * @return the childCut
@@ -138,25 +127,13 @@ public class Node{
         this.childCut = childCut;
     }
 
-
+    //for testing purposes
     @Override
     public String toString() {
         String str = String.valueOf(this.data);
-
         return str;
 
     }
-
-    public void reset(){
-        // this.degree = 0;
-        // this.child = null;
-        this.parent = null;
-        this.data = -9999;
-        this.leftSib = null;
-        this.rightSib = null;
-        // this.childCut = false;
-    }
-    
     
   
 
